@@ -6,10 +6,10 @@ import RunnersList from "./components/RunnersList";
 import RunnerCard from "./components/RunnerCard";
 import RaceCalculations from "./components/RaceCalculations";
 import RaceObstacles from "./components/RaceObstacles";
+import LiveRace from "./components/LiveRace";
 
 import runnersData from "./components/runners.json";
 
-// Sample runner data structure matching your current setup
 const sampleRunners = [
   {
     id: 1,
@@ -284,6 +284,7 @@ export default function App() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRunners, setSelectedRunners] = useState([]);
   const [obstacles, setObstacles] = useState(sampleObstacles);
+  const [activeTab, setActiveTab] = useState("simulation"); // simulation or liveRace
 
   const filteredRunners = runners.filter((runner) =>
     runner.name.toLowerCase().includes(searchTerm.toLowerCase()),
@@ -331,10 +332,41 @@ export default function App() {
 
         {/* Main Column - Race Simulation */}
         <div className="col-span-5">
-          <RaceSimulation
-            selectedRunners={selectedRunners}
-            obstacles={obstacles}
-          />
+          {/* Tab Navigation */}
+          <div className="flex mb-4 border-b">
+            <button
+              onClick={() => setActiveTab("simulation")}
+              className={`px-4 py-2 font-medium ${
+                activeTab === "simulation"
+                  ? "border-b-2 border-blue-500 text-blue-600"
+                  : "text-gray-600 hover:text-gray-800"
+              }`}
+            >
+              Quick Simulation
+            </button>
+            <button
+              onClick={() => setActiveTab("liveRace")}
+              className={`px-4 py-2 font-medium ${
+                activeTab === "liveRace"
+                  ? "border-b-2 border-blue-500 text-blue-600"
+                  : "text-gray-600 hover:text-gray-800"
+              }`}
+            >
+              Live Race
+            </button>
+          </div>
+
+          {/* Tab Content */}
+          {activeTab === "simulation" && (
+            <RaceSimulation
+              selectedRunners={selectedRunners}
+              obstacles={obstacles}
+            />
+          )}
+
+          {activeTab === "liveRace" && (
+            <LiveRace selectedRunners={selectedRunners} obstacles={obstacles} />
+          )}
         </div>
 
         {/* Right Column - Race Obstacles */}
